@@ -1,0 +1,283 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "",
+      "password": "{{apiKey}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Product", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List product categories.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.scalablepress.com/v2/categories" },
+          "docs": "Lists all product categories in the catalog."
+        },
+        {
+          "info": { "name": "List products in a category.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/categories/:categoryId",
+            "params": [
+              { "name": "categoryId", "value": "", "type": "path", "description": "The ID of the category." }
+            ]
+          },
+          "docs": "Lists the products in a given category."
+        },
+        {
+          "info": { "name": "List product information.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId",
+            "params": [
+              { "name": "productId", "value": "", "type": "path", "description": "The ID of the product." }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single product."
+        },
+        {
+          "info": { "name": "List product availability.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId/availability",
+            "params": [
+              { "name": "productId", "value": "", "type": "path", "description": "The ID of the product." }
+            ]
+          },
+          "docs": "Retrieves per-color and per-size stock availability for a product."
+        },
+        {
+          "info": { "name": "List detailed item information.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId/items",
+            "params": [
+              { "name": "productId", "value": "", "type": "path", "description": "The ID of the product." }
+            ]
+          },
+          "docs": "Retrieves item-level details (color, size, SKU, weight, price) for a product."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Quote", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Standard quote.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/quote",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Requests a price quote itemizing product, printing, and shipping costs."
+        },
+        {
+          "info": { "name": "Bulk quote.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/quote/bulk",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Requests a price quote for many items at once, with optional per-item shipping."
+        },
+        {
+          "info": { "name": "Retrieve quote.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/quote/:orderToken",
+            "params": [
+              { "name": "orderToken", "value": "", "type": "path", "description": "The order token returned by a quote." }
+            ]
+          },
+          "docs": "Retrieves a previously generated quote by its order token."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Order", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve all orders.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.scalablepress.com/v2/order" },
+          "docs": "Lists all orders on the account."
+        },
+        {
+          "info": { "name": "Place order.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Places an order from a quote order token."
+        },
+        {
+          "info": { "name": "Retrieve single order.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/order/:orderId",
+            "params": [
+              { "name": "orderId", "value": "", "type": "path", "description": "The ID of the order." }
+            ]
+          },
+          "docs": "Retrieves a single order by its ID."
+        },
+        {
+          "info": { "name": "Reprint order.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order/:orderId/reprint",
+            "params": [
+              { "name": "orderId", "value": "", "type": "path", "description": "The ID of the order." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Reprints a previously placed order."
+        },
+        {
+          "info": { "name": "Change order address.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order/:orderId/changeAddress",
+            "params": [
+              { "name": "orderId", "value": "", "type": "path", "description": "The ID of the order." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Changes the shipping address for an order."
+        },
+        {
+          "info": { "name": "Cancel entire order.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.scalablepress.com/v2/order/:orderId",
+            "params": [
+              { "name": "orderId", "value": "", "type": "path", "description": "The ID of the order." }
+            ]
+          },
+          "docs": "Cancels an entire order."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Event", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Query events.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.scalablepress.com/v3/event" },
+          "docs": "Queries order and item lifecycle events, optionally filtered by order and type."
+        },
+        {
+          "info": { "name": "Retrieve single event.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v3/event/:eventId",
+            "params": [
+              { "name": "eventId", "value": "", "type": "path", "description": "The ID of the event." }
+            ]
+          },
+          "docs": "Retrieves a single event by its ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Design", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create design object.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/design",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Creates a reusable design object describing artwork and its placement."
+        },
+        {
+          "info": { "name": "Retrieve design object.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/design/:designId",
+            "params": [
+              { "name": "designId", "value": "", "type": "path", "description": "The ID of the design." }
+            ]
+          },
+          "docs": "Retrieves a design object by its ID."
+        },
+        {
+          "info": { "name": "Delete design.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.scalablepress.com/v2/design/:designId",
+            "params": [
+              { "name": "designId", "value": "", "type": "path", "description": "The ID of the design." }
+            ]
+          },
+          "docs": "Deletes a design object by its ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Customization", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve customizations.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.scalablepress.com/v2/customization" },
+          "docs": "Retrieves the available customization options."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Mockup", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create mockup.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v3/mockup",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Renders a product mockup previewing a design applied to a product."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Billing", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List invoices.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.scalablepress.com/v2/billing/invoice" },
+          "docs": "Lists the billing invoices on the account."
+        },
+        {
+          "info": { "name": "Retrieve invoice.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/billing/invoice/:invoiceId",
+            "params": [
+              { "name": "invoiceId", "value": "", "type": "path", "description": "The ID of the invoice." }
+            ]
+          },
+          "docs": "Retrieves a single invoice by its ID."
+        },
+        {
+          "info": { "name": "Pay invoice with PayPal.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/billing/invoice/:invoiceId/pay/paypal",
+            "params": [
+              { "name": "invoiceId", "value": "", "type": "path", "description": "The ID of the invoice." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Pays an invoice via PayPal."
+        }
+      ]
+    }
+  ]
+}

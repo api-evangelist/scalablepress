@@ -1,0 +1,92 @@
+aid: scalablepress
+name: Scalable Press
+review:
+  question: Does Scalable Press expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Scalable Press's public API is
+    request/response REST over HTTPS. Order and item lifecycle updates are
+    exposed through the pull-based v3 Event API (GET /v3/event and
+    GET /v3/event/{eventId}), which clients poll - there is no server-push
+    transport (WebSocket or SSE) documented on Scalable Press's own API to
+    model. Any push-style delivery to a merchant is arranged out-of-band and is
+    not a documented WebSocket surface.
+findings:
+  summary: |
+    Scalable Press does not publish a documented public WebSocket API. Scalable
+    Press is a print-on-demand and fulfillment platform for custom apparel,
+    accessories, and promotional products. Its public API
+    (https://api.scalablepress.com) is pure request/response REST over HTTPS,
+    authenticated with HTTP Basic auth where the private API key is supplied as
+    the password and the username is left blank. The API spans a v2 surface
+    (Product, Quote, Order, Design, Customization, Billing) and a v3 surface
+    (Event, Mockup). Order and item status is surfaced through the v3 Event API,
+    which is queried/polled over HTTP - not a WebSocket. No realtime,
+    bidirectional, or streaming WebSocket (ws:// or wss://) endpoint is
+    documented anywhere in the Scalable Press API reference as of the review
+    date.
+  openSource: |
+    Scalable Press is a commercial, closed-source SaaS platform. No open-source
+    server or self-hostable component is published. Client SDKs and community
+    wrappers may exist, but the platform and API are vendor-operated.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.scalablepress.com
+      documented: true
+      note: Product, Quote, Order, Design, Customization, and Billing under /v2; Event and Mockup under /v3.
+    - protocol: HTTP Polling
+      scheme: https
+      documented: true
+      note: Order and item lifecycle read via GET /v3/event and GET /v3/event/{eventId}. Client-initiated polling, not server push.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in the Scalable Press API reference as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://api.scalablepress.com/v2/categories
+    - GET    https://api.scalablepress.com/v2/categories/{categoryId}
+    - GET    https://api.scalablepress.com/v2/products/{productId}
+    - GET    https://api.scalablepress.com/v2/products/{productId}/availability
+    - GET    https://api.scalablepress.com/v2/products/{productId}/items
+    - POST   https://api.scalablepress.com/v2/quote
+    - POST   https://api.scalablepress.com/v2/quote/bulk
+    - GET    https://api.scalablepress.com/v2/quote/{orderToken}
+    - GET    https://api.scalablepress.com/v2/order
+    - POST   https://api.scalablepress.com/v2/order
+    - GET    https://api.scalablepress.com/v2/order/{orderId}
+    - DELETE https://api.scalablepress.com/v2/order/{orderId}
+    - POST   https://api.scalablepress.com/v2/order/{orderId}/reprint
+    - POST   https://api.scalablepress.com/v2/order/{orderId}/changeAddress
+    - GET    https://api.scalablepress.com/v3/event
+    - GET    https://api.scalablepress.com/v3/event/{eventId}
+    - POST   https://api.scalablepress.com/v2/design
+    - GET    https://api.scalablepress.com/v2/design/{designId}
+    - DELETE https://api.scalablepress.com/v2/design/{designId}
+    - GET    https://api.scalablepress.com/v2/customization
+    - POST   https://api.scalablepress.com/v3/mockup
+    - GET    https://api.scalablepress.com/v2/billing/invoice
+    - GET    https://api.scalablepress.com/v2/billing/invoice/{invoiceId}
+    - POST   https://api.scalablepress.com/v2/billing/invoice/{invoiceId}/pay/paypal
+sources:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+    note: API reference with base URL, HTTP Basic auth, and all documented v2/v3 endpoints.
+  - url: https://scalablepress.com/api
+    type: Documentation
+    note: Developer API landing page describing the print-and-ship API.
+  - url: https://scalablepress.com/
+    type: Website
+    note: Company overview - print-on-demand and fulfillment platform.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Scalable Press's public API is
+    request/response REST (v2 and v3), and order/item status is surfaced via the
+    pull-based v3 Event API polled over HTTP. No AsyncAPI document was created
+    because there is no documented server-push transport on Scalable Press's own
+    API to model.

@@ -1,0 +1,54 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Scalable Press
+providerId: scalablepress
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Print on Demand
+- Fulfillment
+- Custom Printing
+- Rate Limiting
+- Quotas
+description: >-
+  Scalable Press does not publish fixed numeric rate limits for its REST API in
+  the public documentation. Practical throughput is governed by ordinary REST
+  request handling and by fulfillment capacity rather than a documented
+  per-minute request cap. Order status is read by polling the v3 Event API,
+  which should be requested on a sensible interval rather than tight loops.
+notes: >-
+  No numeric per-account or per-endpoint request-rate limit is documented as of
+  the review date. Clients should implement exponential backoff with jitter,
+  honor Retry-After when present, and poll GET /v3/event at a reasonable cadence.
+  Confirm any account-specific limits with Scalable Press.
+sources:
+- https://scalablepress.com/docs/
+- https://scalablepress.com/api
+responseCodes:
+  throttled: 429
+limits:
+- name: REST API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the v2/v3 REST API.
+- name: Event Polling
+  scope: account
+  metric: requests
+  limit: not published
+  notes: Order/item status is read by polling GET /v3/event; poll on a sensible interval.
+- name: Order Throughput
+  scope: account
+  metric: orders
+  limit: fulfillment-bound
+  notes: Effective order throughput is bound by production/fulfillment capacity, not a documented API cap.
+policies:
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+- name: Polling Cadence
+  description: Poll the v3 Event API at a reasonable interval rather than in tight loops to retrieve order and item status.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,226 @@
+aid: scalablepress
+url: https://raw.githubusercontent.com/api-evangelist/scalablepress/refs/heads/main/apis.yml
+name: Scalable Press
+kind: company
+description: >-
+  Scalable Press is a technology-driven print-on-demand and fulfillment platform
+  for custom apparel, accessories, and promotional products, offering DTG
+  (direct-to-garment) and screen printing, embroidery, laser engraving, posters,
+  and phone cases with worldwide shipping. Its public REST API lets developers
+  browse a wholesale blank-and-printed product catalog, generate price quotes
+  (including item, print, and shipping costs), place and manage print-and-ship
+  orders, track fulfillment status through order events, create designs and
+  product mockups, and retrieve billing invoices. The API uses HTTP Basic
+  authentication with a private API key supplied as the password, spans v2
+  (product, quote, order, design, customization, billing) and v3 (event,
+  mockup) surfaces, and operates on a pay-per-order model with no monthly
+  subscription fee.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Print on Demand
+- Fulfillment
+- Apparel
+- Custom Printing
+- E-Commerce
+- Wholesale
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: scalablepress:scalablepress-product-api
+  name: Scalable Press Product API
+  tags:
+  - Products
+  - Catalog
+  - Categories
+  - Inventory
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v2
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Browse the Scalable Press wholesale blank-and-printed product catalog. List
+    product categories, list the products within a category, and retrieve
+    detailed product information, per-variant availability, and item-level
+    details (colors, sizes, SKUs, and pricing) used to build quotes and orders.
+- aid: scalablepress:scalablepress-quote-api
+  name: Scalable Press Quote API
+  tags:
+  - Quote
+  - Pricing
+  - Shipping
+  - Estimates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v2
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Generate price quotes for print-and-ship jobs before ordering. Request a
+    standard quote or a bulk quote for many items, choose custom shipping
+    methods per item via the shipping feature (USPS, UPS, FedEx, and DHL service
+    codes), and retrieve a saved quote by its order token. A quote itemizes
+    product, printing, and shipping costs.
+- aid: scalablepress:scalablepress-order-api
+  name: Scalable Press Order API
+  tags:
+  - Orders
+  - Fulfillment
+  - Shipping
+  - Print and Ship
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v2
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Place and manage print-and-ship orders. Submit an order from a quote token,
+    reprint a previous order, list all orders, retrieve a single order, change
+    an order's shipping address, and cancel an order. Shipping methods and
+    destination addresses are carried on each order; orders may be placed on
+    account credit and are held when credit is insufficient.
+- aid: scalablepress:scalablepress-event-api
+  name: Scalable Press Event API
+  tags:
+  - Events
+  - Order Status
+  - Tracking
+  - Webhooks
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v3
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Track order and item lifecycle through events. Query events (order, item,
+    validated, paid, unpaid, printing, shipped, cancelled, address-changed,
+    expired, hold) and retrieve a single event by ID to build order-status and
+    fulfillment-tracking workflows on top of the v3 event stream.
+- aid: scalablepress:scalablepress-design-api
+  name: Scalable Press Design API
+  tags:
+  - Design
+  - Artwork
+  - Customization
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v2
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Create and manage reusable design objects that describe the artwork and its
+    placement on a product. Create a design, retrieve a design by ID, and delete
+    a design, then reference designs from quotes and orders and from the
+    available customization options.
+- aid: scalablepress:scalablepress-mockup-api
+  name: Scalable Press Mockup API
+  tags:
+  - Mockup
+  - Preview
+  - Images
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v3
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Render product mockups that preview a design applied to a product on the v3
+    mockup surface, for building customer-facing previews before a quote or
+    order is placed.
+- aid: scalablepress:scalablepress-billing-api
+  name: Scalable Press Billing API
+  tags:
+  - Billing
+  - Invoices
+  - Payments
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://scalablepress.com/docs/
+  baseURL: https://api.scalablepress.com/v2
+  properties:
+  - url: https://scalablepress.com/docs/
+    type: Documentation
+  - url: https://scalablepress.com/docs/
+    type: APIReference
+  - url: openapi/scalablepress-openapi.yml
+    type: OpenAPI
+  - url: collections/scalablepress.postman_collection.json
+    type: PostmanCollection
+  - url: collections/scalablepress.opencollection.json
+    type: OpenCollection
+  description: >-
+    Retrieve account billing information. List invoices, retrieve a single
+    invoice by ID, and pay an invoice via PayPal, supporting reconciliation of
+    the pay-per-order production and shipping charges.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/scalablepress
+- type: Website
+  url: https://scalablepress.com
+- type: Documentation
+  url: https://scalablepress.com/docs/
+- type: SignUp
+  url: https://scalablepress.com/api
+- type: Plans
+  url: plans/scalablepress-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/scalablepress-rate-limits.yml
+- type: FinOps
+  url: finops/scalablepress-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

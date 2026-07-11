@@ -1,0 +1,284 @@
+{
+  "info": {
+    "name": "Scalable Press API",
+    "description": "REST API for the Scalable Press print-on-demand and fulfillment platform. Browse the product catalog, generate quotes, place and manage print-and-ship orders, track order/item events, create designs and mockups, and retrieve billing invoices. Base URL: https://api.scalablepress.com (v2 and v3 paths). Authentication is HTTP Basic auth - supply your private API key as the password and leave the username blank.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "", "type": "string" },
+      { "key": "password", "value": "{{apiKey}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.scalablepress.com", "type": "string" },
+    { "key": "apiKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "List product categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/categories", "host": ["{{baseUrl}}"], "path": ["v2", "categories"] },
+            "description": "Lists all product categories in the catalog."
+          }
+        },
+        {
+          "name": "List products in a category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/categories/:categoryId", "host": ["{{baseUrl}}"], "path": ["v2", "categories", ":categoryId"], "variable": [{ "key": "categoryId", "value": "" }] },
+            "description": "Lists the products in a given category."
+          }
+        },
+        {
+          "name": "List product information",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/products/:productId", "host": ["{{baseUrl}}"], "path": ["v2", "products", ":productId"], "variable": [{ "key": "productId", "value": "" }] },
+            "description": "Retrieves detailed information about a single product."
+          }
+        },
+        {
+          "name": "List product availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/products/:productId/availability", "host": ["{{baseUrl}}"], "path": ["v2", "products", ":productId", "availability"], "variable": [{ "key": "productId", "value": "" }] },
+            "description": "Retrieves per-color and per-size stock availability for a product."
+          }
+        },
+        {
+          "name": "List detailed item information",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/products/:productId/items", "host": ["{{baseUrl}}"], "path": ["v2", "products", ":productId", "items"], "variable": [{ "key": "productId", "value": "" }] },
+            "description": "Retrieves item-level details (color, size, SKU, weight, price) for a product."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quote",
+      "item": [
+        {
+          "name": "Standard quote",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [],\n  \"features\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/quote", "host": ["{{baseUrl}}"], "path": ["v2", "quote"] },
+            "description": "Requests a price quote itemizing product, printing, and shipping costs."
+          }
+        },
+        {
+          "name": "Bulk quote",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/quote/bulk", "host": ["{{baseUrl}}"], "path": ["v2", "quote", "bulk"] },
+            "description": "Requests a price quote for many items at once, with optional per-item shipping."
+          }
+        },
+        {
+          "name": "Retrieve quote",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/quote/:orderToken", "host": ["{{baseUrl}}"], "path": ["v2", "quote", ":orderToken"], "variable": [{ "key": "orderToken", "value": "" }] },
+            "description": "Retrieves a previously generated quote by its order token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "item": [
+        {
+          "name": "Retrieve all orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/order", "host": ["{{baseUrl}}"], "path": ["v2", "order"] },
+            "description": "Lists all orders on the account."
+          }
+        },
+        {
+          "name": "Place order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"orderToken\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/order", "host": ["{{baseUrl}}"], "path": ["v2", "order"] },
+            "description": "Places an order from a quote order token."
+          }
+        },
+        {
+          "name": "Retrieve single order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/order/:orderId", "host": ["{{baseUrl}}"], "path": ["v2", "order", ":orderId"], "variable": [{ "key": "orderId", "value": "" }] },
+            "description": "Retrieves a single order by its ID."
+          }
+        },
+        {
+          "name": "Reprint order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/order/:orderId/reprint", "host": ["{{baseUrl}}"], "path": ["v2", "order", ":orderId", "reprint"], "variable": [{ "key": "orderId", "value": "" }] },
+            "description": "Reprints a previously placed order."
+          }
+        },
+        {
+          "name": "Change order address",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"\",\n  \"address1\": \"\",\n  \"city\": \"\",\n  \"state\": \"\",\n  \"zip\": \"\",\n  \"country\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/order/:orderId/changeAddress", "host": ["{{baseUrl}}"], "path": ["v2", "order", ":orderId", "changeAddress"], "variable": [{ "key": "orderId", "value": "" }] },
+            "description": "Changes the shipping address for an order."
+          }
+        },
+        {
+          "name": "Cancel entire order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/order/:orderId", "host": ["{{baseUrl}}"], "path": ["v2", "order", ":orderId"], "variable": [{ "key": "orderId", "value": "" }] },
+            "description": "Cancels an entire order."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event",
+      "item": [
+        {
+          "name": "Query events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v3/event", "host": ["{{baseUrl}}"], "path": ["v3", "event"] },
+            "description": "Queries order and item lifecycle events, optionally filtered by order and type."
+          }
+        },
+        {
+          "name": "Retrieve single event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v3/event/:eventId", "host": ["{{baseUrl}}"], "path": ["v3", "event", ":eventId"], "variable": [{ "key": "eventId", "value": "" }] },
+            "description": "Retrieves a single event by its ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Design",
+      "item": [
+        {
+          "name": "Create design object",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"sides\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/design", "host": ["{{baseUrl}}"], "path": ["v2", "design"] },
+            "description": "Creates a reusable design object describing artwork and its placement."
+          }
+        },
+        {
+          "name": "Retrieve design object",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/design/:designId", "host": ["{{baseUrl}}"], "path": ["v2", "design", ":designId"], "variable": [{ "key": "designId", "value": "" }] },
+            "description": "Retrieves a design object by its ID."
+          }
+        },
+        {
+          "name": "Delete design",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/design/:designId", "host": ["{{baseUrl}}"], "path": ["v2", "design", ":designId"], "variable": [{ "key": "designId", "value": "" }] },
+            "description": "Deletes a design object by its ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customization",
+      "item": [
+        {
+          "name": "Retrieve customizations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/customization", "host": ["{{baseUrl}}"], "path": ["v2", "customization"] },
+            "description": "Retrieves the available customization options."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mockup",
+      "item": [
+        {
+          "name": "Create mockup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v3/mockup", "host": ["{{baseUrl}}"], "path": ["v3", "mockup"] },
+            "description": "Renders a product mockup previewing a design applied to a product."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "List invoices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/billing/invoice", "host": ["{{baseUrl}}"], "path": ["v2", "billing", "invoice"] },
+            "description": "Lists the billing invoices on the account."
+          }
+        },
+        {
+          "name": "Retrieve invoice",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/billing/invoice/:invoiceId", "host": ["{{baseUrl}}"], "path": ["v2", "billing", "invoice", ":invoiceId"], "variable": [{ "key": "invoiceId", "value": "" }] },
+            "description": "Retrieves a single invoice by its ID."
+          }
+        },
+        {
+          "name": "Pay invoice with PayPal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/billing/invoice/:invoiceId/pay/paypal", "host": ["{{baseUrl}}"], "path": ["v2", "billing", "invoice", ":invoiceId", "pay", "paypal"], "variable": [{ "key": "invoiceId", "value": "" }] },
+            "description": "Pays an invoice via PayPal."
+          }
+        }
+      ]
+    }
+  ]
+}

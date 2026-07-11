@@ -1,0 +1,828 @@
+openapi: 3.0.3
+info:
+  title: Scalable Press API
+  description: >-
+    The Scalable Press API is a REST interface to a print-on-demand and
+    fulfillment platform for custom apparel, accessories, and promotional
+    products. It lets developers browse a wholesale blank-and-printed product
+    catalog, generate price quotes (product, printing, and shipping costs),
+    place and manage print-and-ship orders, track fulfillment through order and
+    item events, create designs and product mockups, and retrieve billing
+    invoices. Authentication uses HTTP Basic auth - your private API key is
+    supplied as the password (the username is left blank). The API spans two
+    versioned surfaces - v2 for product, quote, order, design, customization,
+    and billing, and v3 for event and mockup - both served from
+    https://api.scalablepress.com.
+  version: '2.0'
+  contact:
+    name: Scalable Press
+    url: https://scalablepress.com/docs/
+servers:
+  - url: https://api.scalablepress.com
+    description: Scalable Press API (v2 and v3 paths)
+security:
+  - basicAuth: []
+tags:
+  - name: Product
+    description: Product catalog, categories, availability, and item details.
+  - name: Quote
+    description: Standard and bulk price quotes including shipping.
+  - name: Order
+    description: Place and manage print-and-ship orders.
+  - name: Event
+    description: Order and item lifecycle events (v3).
+  - name: Design
+    description: Reusable design objects describing artwork and placement.
+  - name: Customization
+    description: Available customization options.
+  - name: Mockup
+    description: Product mockup rendering (v3).
+  - name: Billing
+    description: Invoices and payments.
+paths:
+  /v2/categories:
+    get:
+      operationId: listCategories
+      tags:
+        - Product
+      summary: List product categories
+      description: Lists all product categories in the Scalable Press catalog.
+      responses:
+        '200':
+          description: A list of product categories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/categories/{categoryId}:
+    parameters:
+      - $ref: '#/components/parameters/CategoryId'
+    get:
+      operationId: listCategoryProducts
+      tags:
+        - Product
+      summary: List products in a category
+      description: Lists the products that belong to a given category.
+      responses:
+        '200':
+          description: The category and its products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProduct
+      tags:
+        - Product
+      summary: List product information
+      description: Retrieves detailed information about a single product.
+      responses:
+        '200':
+          description: The requested product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}/availability:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProductAvailability
+      tags:
+        - Product
+      summary: List product availability
+      description: Retrieves per-color and per-size stock availability for a product.
+      responses:
+        '200':
+          description: Availability by color and size.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}/items:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProductItems
+      tags:
+        - Product
+      summary: List detailed item information
+      description: >-
+        Retrieves detailed item-level information (color, size, SKU, weight, and
+        pricing) for a product's individual variants.
+      responses:
+        '200':
+          description: A list of product items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/quote:
+    post:
+      operationId: createQuote
+      tags:
+        - Quote
+      summary: Standard quote
+      description: >-
+        Requests a price quote for a print-and-ship job, itemizing product,
+        printing, and shipping costs. Custom shipping methods may be selected
+        per item via the shipping feature.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: The generated quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/quote/bulk:
+    post:
+      operationId: createBulkQuote
+      tags:
+        - Quote
+      summary: Bulk quote
+      description: >-
+        Requests a price quote for many items at once. Individual items in a
+        bulk order may use different custom shipping methods, or none at all.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: The generated bulk quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/quote/{orderToken}:
+    parameters:
+      - $ref: '#/components/parameters/OrderToken'
+    get:
+      operationId: getQuote
+      tags:
+        - Quote
+      summary: Retrieve quote
+      description: Retrieves a previously generated quote by its order token.
+      responses:
+        '200':
+          description: The requested quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/order:
+    get:
+      operationId: listOrders
+      tags:
+        - Order
+      summary: Retrieve all orders
+      description: Lists all orders on the account.
+      responses:
+        '200':
+          description: A list of orders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createOrder
+      tags:
+        - Order
+      summary: Place order
+      description: >-
+        Places an order from a quote order token. The order may be placed on
+        account credit; orders are held when account credit is insufficient.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '200':
+          description: The placed order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/order/{orderId}:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    get:
+      operationId: getOrder
+      tags:
+        - Order
+      summary: Retrieve single order
+      description: Retrieves a single order by its ID.
+      responses:
+        '200':
+          description: The requested order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: cancelOrder
+      tags:
+        - Order
+      summary: Cancel entire order
+      description: Cancels an entire order.
+      responses:
+        '200':
+          description: Cancellation confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/order/{orderId}/reprint:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: reprintOrder
+      tags:
+        - Order
+      summary: Reprint order
+      description: Reprints a previously placed order.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The reprint order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/order/{orderId}/changeAddress:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: changeOrderAddress
+      tags:
+        - Order
+      summary: Change order address
+      description: Changes the shipping address for an order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v3/event:
+    get:
+      operationId: queryEvents
+      tags:
+        - Event
+      summary: Query events
+      description: >-
+        Queries order and item lifecycle events - such as order, validated,
+        paid, unpaid, printing, shipped, cancelled, address-changed, expired,
+        and hold - optionally filtered by order and event type.
+      parameters:
+        - name: orderId
+          in: query
+          required: false
+          description: Filter events for a specific order.
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          description: Filter by event type.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v3/event/{eventId}:
+    parameters:
+      - name: eventId
+        in: path
+        required: true
+        description: The ID of the event.
+        schema:
+          type: string
+    get:
+      operationId: getEvent
+      tags:
+        - Event
+      summary: Retrieve single event
+      description: Retrieves a single event by its ID.
+      responses:
+        '200':
+          description: The requested event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/design:
+    post:
+      operationId: createDesign
+      tags:
+        - Design
+      summary: Create design object
+      description: Creates a reusable design object describing artwork and its placement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Design'
+      responses:
+        '200':
+          description: The created design.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Design'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/design/{designId}:
+    parameters:
+      - name: designId
+        in: path
+        required: true
+        description: The ID of the design.
+        schema:
+          type: string
+    get:
+      operationId: getDesign
+      tags:
+        - Design
+      summary: Retrieve design object
+      description: Retrieves a design object by its ID.
+      responses:
+        '200':
+          description: The requested design.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Design'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteDesign
+      tags:
+        - Design
+      summary: Delete design
+      description: Deletes a design object by its ID.
+      responses:
+        '200':
+          description: Deletion confirmation.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/customization:
+    get:
+      operationId: getCustomizations
+      tags:
+        - Customization
+      summary: Retrieve customizations
+      description: Retrieves the available customization options.
+      responses:
+        '200':
+          description: The available customizations.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v3/mockup:
+    post:
+      operationId: createMockup
+      tags:
+        - Mockup
+      summary: Create mockup
+      description: Renders a product mockup previewing a design applied to a product.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The rendered mockup.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/billing/invoice:
+    get:
+      operationId: listInvoices
+      tags:
+        - Billing
+      summary: List invoices
+      description: Lists the billing invoices on the account.
+      responses:
+        '200':
+          description: A list of invoices.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/billing/invoice/{invoiceId}:
+    parameters:
+      - name: invoiceId
+        in: path
+        required: true
+        description: The ID of the invoice.
+        schema:
+          type: string
+    get:
+      operationId: getInvoice
+      tags:
+        - Billing
+      summary: Retrieve invoice
+      description: Retrieves a single invoice by its ID.
+      responses:
+        '200':
+          description: The requested invoice.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/billing/invoice/{invoiceId}/pay/paypal:
+    parameters:
+      - name: invoiceId
+        in: path
+        required: true
+        description: The ID of the invoice.
+        schema:
+          type: string
+    post:
+      operationId: payInvoicePaypal
+      tags:
+        - Billing
+      summary: Pay invoice with PayPal
+      description: Pays an invoice via PayPal.
+      responses:
+        '200':
+          description: Payment result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: >-
+        HTTP Basic authentication. Supply your private Scalable Press API key as
+        the password; the username is left blank.
+  parameters:
+    CategoryId:
+      name: categoryId
+      in: path
+      required: true
+      description: The ID of the product category.
+      schema:
+        type: string
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      description: The ID of the product.
+      schema:
+        type: string
+    OrderToken:
+      name: orderToken
+      in: path
+      required: true
+      description: The order token returned by a quote.
+      schema:
+        type: string
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      description: The ID of the order.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        colors:
+          type: array
+          items:
+            type: string
+        sizes:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          additionalProperties: true
+    ProductItem:
+      type: object
+      properties:
+        id:
+          type: string
+        color:
+          type: string
+        size:
+          type: string
+        sku:
+          type: string
+        weight:
+          type: number
+        price:
+          type: number
+    QuoteRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        features:
+          type: object
+          description: >-
+            Optional per-quote features. The shipping feature selects custom
+            shipping methods using carrier service codes such as US-FC, UPS-GND,
+            FDX-GND, and DHL-GM.
+          additionalProperties: true
+    Quote:
+      type: object
+      properties:
+        orderToken:
+          type: string
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        shipping:
+          type: object
+          additionalProperties: true
+    OrderRequest:
+      type: object
+      required:
+        - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+    Event:
+      type: object
+      properties:
+        eventId:
+          type: string
+        type:
+          type: string
+          description: >-
+            Event type such as order, validated, paid, unpaid, printing,
+            shipped, cancelled, address-changed, expired, or hold.
+        orderId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          additionalProperties: true
+    Design:
+      type: object
+      properties:
+        designId:
+          type: string
+        sides:
+          type: object
+          additionalProperties: true
+        name:
+          type: string
+    Invoice:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+        status:
+          type: string
+        total:
+          type: number
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time

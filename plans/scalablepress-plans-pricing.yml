@@ -1,0 +1,93 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Scalable Press
+providerId: scalablepress
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Print on Demand
+- Fulfillment
+- Apparel
+- Custom Printing
+- Plans
+description: >-
+  Scalable Press does not charge a monthly subscription or seat fee to use its
+  API. Pricing is pay-per-order - each order is billed for the product (blank)
+  cost plus printing (DTG, screen print, embroidery, laser engraving, etc.) plus
+  shipping. The API is free to obtain and call; you only pay when you place
+  orders. Orders may be placed on account credit and are held when account
+  credit is insufficient. High-volume and wholesale rates are negotiated
+  directly with Scalable Press. Exact per-unit product and printing prices are
+  not reconciled here.
+notes: >-
+  Per-item production prices vary by product, print method, decoration size, and
+  quantity; shipping is priced by carrier service and destination. Use the Quote
+  API (POST /v2/quote) to get authoritative, itemized pricing. Verify current
+  wholesale/high-volume terms with Scalable Press.
+sources:
+- https://scalablepress.com/
+- https://scalablepress.com/pricing
+- https://scalablepress.com/docs/
+- https://scalablepress.com/api
+plans:
+- id: scalablepress-pay-per-order
+  name: Pay Per Order
+  type: usage
+  description: >-
+    Standard access. No monthly fee - pay product plus printing plus shipping on
+    each order. Use the Quote API for authoritative itemized pricing before
+    ordering.
+  entries:
+  - label: API Access
+    name: api_access
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0 monthly (no subscription fee)
+    userMultiplied: false
+  - label: Per-Order Production
+    name: per_order_production
+    type: usage
+    metric: orders
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: product cost + printing + shipping, itemized per quote
+    userMultiplied: false
+  elements:
+  - name: Product Catalog Access
+  - name: Quotes (Standard and Bulk)
+  - name: Order Placement and Management
+  - name: Order and Item Events
+  - name: Designs and Mockups
+  - name: Billing and Invoices
+- id: scalablepress-high-volume
+  name: High Volume / Wholesale
+  type: enterprise
+  description: >-
+    Negotiated pricing for high-volume and wholesale buyers. Contact Scalable
+    Press for custom production and shipping rates.
+  entries:
+  - label: Negotiated Agreement
+    name: negotiated
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: Dedicated Fulfillment
+  - name: Account Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

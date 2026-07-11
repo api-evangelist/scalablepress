@@ -1,0 +1,94 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Scalable Press
+providerId: scalablepress
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Print on Demand
+- Fulfillment
+- Custom Printing
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Scalable Press spend. There is no monthly API subscription fee.
+  Cost is driven entirely by orders - each order is billed for the product
+  (blank) cost plus printing (DTG, screen print, embroidery, laser engraving)
+  plus shipping. Spend therefore scales with order volume, product mix, print
+  method and decoration size, and chosen shipping carrier/service. Orders can be
+  funded from prepaid account credit and are held when credit is insufficient.
+notes: >-
+  Per-unit product and printing rates are not reconciled here; use the Quote API
+  to obtain authoritative itemized pricing. High-volume/wholesale rates are
+  negotiated with Scalable Press. Track spend by product, print method, and
+  shipping service to allocate cost of goods sold.
+sources:
+- https://scalablepress.com/
+- https://scalablepress.com/pricing
+- https://scalablepress.com/docs/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Scalable Press
+serviceCategory: Print on Demand and Fulfillment
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Per Order
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Scalable Press API
+  ServiceCategory: Print on Demand and Fulfillment
+  ProviderName: Scalable Press
+  PublisherName: Scalable Press
+  InvoiceIssuerName: Scalable Press
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: product_cost
+  description: Blank product (garment/accessory) cost per ordered item.
+  unit: items
+  aggregation: sum
+  dimensions:
+  - account
+  - product
+  - order
+- name: printing_cost
+  description: Decoration cost per item by print method and decoration size.
+  unit: items
+  aggregation: sum
+  dimensions:
+  - account
+  - print_method
+  - order
+- name: shipping_cost
+  description: Shipping charge per order by carrier service and destination.
+  unit: shipments
+  aggregation: sum
+  dimensions:
+  - account
+  - carrier
+  - order
+principles:
+- name: Visibility
+  description: Track product, printing, and shipping cost per order and per SKU using the itemized quote and invoice data.
+- name: Allocation
+  description: Tag orders to storefronts, campaigns, or customers so cost of goods sold maps to internal cost centers.
+- name: Optimization
+  description: Compare print methods and shipping services, batch orders where possible, and negotiate high-volume rates to lower per-unit cost.
+- name: Accountability
+  description: Reconcile Scalable Press invoices against placed orders monthly and monitor account credit to avoid held orders.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
