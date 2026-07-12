@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/scalablepress-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic authentication. Supply your private Scalable Press API key as the
+    password; the username is left blank.
+  sources:
+  - openapi/scalablepress-openapi.yml
