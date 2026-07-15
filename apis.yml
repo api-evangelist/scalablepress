@@ -207,6 +207,8 @@ apis:
     invoice by ID, and pay an invoice via PayPal, supporting reconciliation of
     the pay-per-order production and shipping charges.
 common:
+- type: AgenticAccess
+  url: agentic-access/scalablepress-agentic-access.yml
 - type: DomainSecurity
   url: security/scalablepress-domain-security.yml
 - type: Authentication
