@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: Scalable Press Billing Quote API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  version: '2.0'
+  contact:
+    name: Scalable Press
+    url: https://scalablepress.com/docs/
+servers:
+- url: https://api.scalablepress.com
+  description: Scalable Press API (v2 and v3 paths)
+security:
+- basicAuth: []
+tags:
+- name: Quote
+  description: Standard and bulk price quotes including shipping.
+paths:
+  /v2/quote:
+    post:
+      operationId: createQuote
+      tags:
+      - Quote
+      summary: Standard quote
+      description: Requests a price quote for a print-and-ship job, itemizing product, printing, and shipping costs. Custom shipping methods may be selected per item via the shipping feature.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: The generated quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/quote/bulk:
+    post:
+      operationId: createBulkQuote
+      tags:
+      - Quote
+      summary: Bulk quote
+      description: Requests a price quote for many items at once. Individual items in a bulk order may use different custom shipping methods, or none at all.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: The generated bulk quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/quote/{orderToken}:
+    parameters:
+    - $ref: '#/components/parameters/OrderToken'
+    get:
+      operationId: getQuote
+      tags:
+      - Quote
+      summary: Retrieve quote
+      description: Retrieves a previously generated quote by its order token.
+      responses:
+        '200':
+          description: The requested quote.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    OrderToken:
+      name: orderToken
+      in: path
+      required: true
+      description: The order token returned by a quote.
+      schema:
+        type: string
+  schemas:
+    QuoteRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        features:
+          type: object
+          description: Optional per-quote features. The shipping feature selects custom shipping methods using carrier service codes such as US-FC, UPS-GND, FDX-GND, and DHL-GM.
+          additionalProperties: true
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+    Quote:
+      type: object
+      properties:
+        orderToken:
+          type: string
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        shipping:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication. Supply your private Scalable Press API key as the password; the username is left blank.

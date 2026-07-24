@@ -1,0 +1,258 @@
+openapi: 3.0.3
+info:
+  title: Scalable Press Billing Order API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  version: '2.0'
+  contact:
+    name: Scalable Press
+    url: https://scalablepress.com/docs/
+servers:
+- url: https://api.scalablepress.com
+  description: Scalable Press API (v2 and v3 paths)
+security:
+- basicAuth: []
+tags:
+- name: Order
+  description: Place and manage print-and-ship orders.
+paths:
+  /v2/order:
+    get:
+      operationId: listOrders
+      tags:
+      - Order
+      summary: Retrieve all orders
+      description: Lists all orders on the account.
+      responses:
+        '200':
+          description: A list of orders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createOrder
+      tags:
+      - Order
+      summary: Place order
+      description: Places an order from a quote order token. The order may be placed on account credit; orders are held when account credit is insufficient.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '200':
+          description: The placed order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /v2/order/{orderId}:
+    parameters:
+    - $ref: '#/components/parameters/OrderId'
+    get:
+      operationId: getOrder
+      tags:
+      - Order
+      summary: Retrieve single order
+      description: Retrieves a single order by its ID.
+      responses:
+        '200':
+          description: The requested order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: cancelOrder
+      tags:
+      - Order
+      summary: Cancel entire order
+      description: Cancels an entire order.
+      responses:
+        '200':
+          description: Cancellation confirmation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/order/{orderId}/reprint:
+    parameters:
+    - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: reprintOrder
+      tags:
+      - Order
+      summary: Reprint order
+      description: Reprints a previously placed order.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The reprint order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/order/{orderId}/changeAddress:
+    parameters:
+    - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: changeOrderAddress
+      tags:
+      - Order
+      summary: Change order address
+      description: Changes the shipping address for an order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+    Event:
+      type: object
+      properties:
+        eventId:
+          type: string
+        type:
+          type: string
+          description: Event type such as order, validated, paid, unpaid, printing, shipped, cancelled, address-changed, expired, or hold.
+        orderId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          additionalProperties: true
+    OrderRequest:
+      type: object
+      required:
+      - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      description: The ID of the order.
+      schema:
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication. Supply your private Scalable Press API key as the password; the username is left blank.

@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info:
+  title: Scalable Press Billing Mockup API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  version: '2.0'
+  contact:
+    name: Scalable Press
+    url: https://scalablepress.com/docs/
+servers:
+- url: https://api.scalablepress.com
+  description: Scalable Press API (v2 and v3 paths)
+security:
+- basicAuth: []
+tags:
+- name: Mockup
+  description: Product mockup rendering (v3).
+paths:
+  /v3/mockup:
+    post:
+      operationId: createMockup
+      tags:
+      - Mockup
+      summary: Create mockup
+      description: Renders a product mockup previewing a design applied to a product.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The rendered mockup.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  responses:
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication. Supply your private Scalable Press API key as the password; the username is left blank.

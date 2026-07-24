@@ -1,0 +1,213 @@
+openapi: 3.0.3
+info:
+  title: Scalable Press Billing Product API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  version: '2.0'
+  contact:
+    name: Scalable Press
+    url: https://scalablepress.com/docs/
+servers:
+- url: https://api.scalablepress.com
+  description: Scalable Press API (v2 and v3 paths)
+security:
+- basicAuth: []
+tags:
+- name: Product
+  description: Product catalog, categories, availability, and item details.
+paths:
+  /v2/categories:
+    get:
+      operationId: listCategories
+      tags:
+      - Product
+      summary: List product categories
+      description: Lists all product categories in the Scalable Press catalog.
+      responses:
+        '200':
+          description: A list of product categories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/categories/{categoryId}:
+    parameters:
+    - $ref: '#/components/parameters/CategoryId'
+    get:
+      operationId: listCategoryProducts
+      tags:
+      - Product
+      summary: List products in a category
+      description: Lists the products that belong to a given category.
+      responses:
+        '200':
+          description: The category and its products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}:
+    parameters:
+    - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProduct
+      tags:
+      - Product
+      summary: List product information
+      description: Retrieves detailed information about a single product.
+      responses:
+        '200':
+          description: The requested product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}/availability:
+    parameters:
+    - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProductAvailability
+      tags:
+      - Product
+      summary: List product availability
+      description: Retrieves per-color and per-size stock availability for a product.
+      responses:
+        '200':
+          description: Availability by color and size.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/products/{productId}/items:
+    parameters:
+    - $ref: '#/components/parameters/ProductId'
+    get:
+      operationId: getProductItems
+      tags:
+      - Product
+      summary: List detailed item information
+      description: Retrieves detailed item-level information (color, size, SKU, weight, and pricing) for a product's individual variants.
+      responses:
+        '200':
+          description: A list of product items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    CategoryId:
+      name: categoryId
+      in: path
+      required: true
+      description: The ID of the product category.
+      schema:
+        type: string
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      description: The ID of the product.
+      schema:
+        type: string
+  schemas:
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        colors:
+          type: array
+          items:
+            type: string
+        sizes:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          additionalProperties: true
+    ProductItem:
+      type: object
+      properties:
+        id:
+          type: string
+        color:
+          type: string
+        size:
+          type: string
+        sku:
+          type: string
+        weight:
+          type: number
+        price:
+          type: number
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication. Supply your private Scalable Press API key as the password; the username is left blank.
