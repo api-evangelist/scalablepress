@@ -1,0 +1,28 @@
+{
+  "provider": "scalablepress",
+  "sources": [
+    "scalablepress-billing-api-openapi.yml",
+    "scalablepress-customization-api-openapi.yml",
+    "scalablepress-design-api-openapi.yml",
+    "scalablepress-event-api-openapi.yml",
+    "scalablepress-mockup-api-openapi.yml",
+    "scalablepress-order-api-openapi.yml",
+    "scalablepress-product-api-openapi.yml",
+    "scalablepress-quote-api-openapi.yml"
+  ],
+  "outputs": [
+    "scalablepress-billing-api-openapi.yml",
+    "scalablepress-customization-api-openapi.yml",
+    "scalablepress-design-api-openapi.yml",
+    "scalablepress-event-api-openapi.yml",
+    "scalablepress-mockup-api-openapi.yml",
+    "scalablepress-order-api-openapi.yml",
+    "scalablepress-product-api-openapi.yml",
+    "scalablepress-quote-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
