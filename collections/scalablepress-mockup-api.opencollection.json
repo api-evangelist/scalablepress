@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Mockup API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Mockup",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create mockup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v3/mockup",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Renders a product mockup previewing a design applied to a product."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

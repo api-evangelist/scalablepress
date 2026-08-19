@@ -1,0 +1,78 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Design API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Design",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create design object",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/design",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a reusable design object describing artwork and its placement."
+        },
+        {
+          "info": {
+            "name": "Retrieve design object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/design/:designId",
+            "params": [
+              {
+                "name": "designId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the design."
+              }
+            ]
+          },
+          "docs": "Retrieves a design object by its ID."
+        },
+        {
+          "info": {
+            "name": "Delete design",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.scalablepress.com/v2/design/:designId",
+            "params": [
+              {
+                "name": "designId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the design."
+              }
+            ]
+          },
+          "docs": "Deletes a design object by its ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

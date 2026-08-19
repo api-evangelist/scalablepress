@@ -1,0 +1,135 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Order API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Order",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve all orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/order"
+          },
+          "docs": "Lists all orders on the account."
+        },
+        {
+          "info": {
+            "name": "Place order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Places an order from a quote order token. The order may be placed on account credit; orders are held when account credit is insufficient."
+        },
+        {
+          "info": {
+            "name": "Retrieve single order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/order/:orderId",
+            "params": [
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              }
+            ]
+          },
+          "docs": "Retrieves a single order by its ID."
+        },
+        {
+          "info": {
+            "name": "Cancel entire order",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.scalablepress.com/v2/order/:orderId",
+            "params": [
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              }
+            ]
+          },
+          "docs": "Cancels an entire order."
+        },
+        {
+          "info": {
+            "name": "Reprint order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order/:orderId/reprint",
+            "params": [
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reprints a previously placed order."
+        },
+        {
+          "info": {
+            "name": "Change order address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/order/:orderId/changeAddress",
+            "params": [
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the order."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Changes the shipping address for an order."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Event API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Event",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v3/event",
+            "params": [
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "query",
+                "description": "Filter events for a specific order."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event type."
+              }
+            ]
+          },
+          "docs": "Queries order and item lifecycle events - such as order, validated, paid, unpaid, printing, shipped, cancelled, address-changed, expired, and hold - optionally filtered by order and event type."
+        },
+        {
+          "info": {
+            "name": "Retrieve single event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v3/event/:eventId",
+            "params": [
+              {
+                "name": "eventId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the event."
+              }
+            ]
+          },
+          "docs": "Retrieves a single event by its ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

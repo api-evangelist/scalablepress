@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Quote API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Quote",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Standard quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a price quote for a print-and-ship job, itemizing product, printing, and shipping costs. Custom shipping methods may be selected per item via the shipping feature."
+        },
+        {
+          "info": {
+            "name": "Bulk quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.scalablepress.com/v2/quote/bulk",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a price quote for many items at once. Individual items in a bulk order may use different custom shipping methods, or none at all."
+        },
+        {
+          "info": {
+            "name": "Retrieve quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/quote/:orderToken",
+            "params": [
+              {
+                "name": "orderToken",
+                "value": "",
+                "type": "path",
+                "description": "The order token returned by a quote."
+              }
+            ]
+          },
+          "docs": "Retrieves a previously generated quote by its order token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,36 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Customization API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve customizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/customization"
+          },
+          "docs": "Retrieves the available customization options."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

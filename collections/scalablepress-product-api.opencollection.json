@@ -1,0 +1,112 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Scalable Press Billing Product API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Product",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List product categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/categories"
+          },
+          "docs": "Lists all product categories in the Scalable Press catalog."
+        },
+        {
+          "info": {
+            "name": "List products in a category",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/categories/:categoryId",
+            "params": [
+              {
+                "name": "categoryId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the product category."
+              }
+            ]
+          },
+          "docs": "Lists the products that belong to a given category."
+        },
+        {
+          "info": {
+            "name": "List product information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the product."
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single product."
+        },
+        {
+          "info": {
+            "name": "List product availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId/availability",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the product."
+              }
+            ]
+          },
+          "docs": "Retrieves per-color and per-size stock availability for a product."
+        },
+        {
+          "info": {
+            "name": "List detailed item information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.scalablepress.com/v2/products/:productId/items",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the product."
+              }
+            ]
+          },
+          "docs": "Retrieves detailed item-level information (color, size, SKU, weight, and pricing) for a product's individual variants."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
