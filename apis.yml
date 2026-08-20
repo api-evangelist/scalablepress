@@ -172,6 +172,8 @@ apis:
   humanURL: https://scalablepress.com/docs/
   baseURL: https://api.scalablepress.com/v2
   tags:
+  - Quotes
+  tags_raw:
   - Quote
   properties:
   - type: OpenAPI
