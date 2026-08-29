@@ -199,6 +199,9 @@ apis:
   - type: OpenCollection
     url: collections/scalablepress.opencollection.json
 common:
+- type: CapabilityMap
+  url: capabilities/scalablepress-capability-edges.yml
+  name: Scalable Press Business Capability Map
 - type: AgenticAccess
   url: agentic-access/scalablepress-agentic-access.yml
 - type: DomainSecurity
