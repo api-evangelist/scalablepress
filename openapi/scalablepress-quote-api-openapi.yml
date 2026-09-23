@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Scalable Press Billing Quote API
-  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  title: Scalable Press Quote API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products.
   version: '2.0'
   contact:
     name: Scalable Press
@@ -84,15 +84,53 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    OrderToken:
-      name: orderToken
-      in: path
-      required: true
-      description: The order token returned by a quote.
-      schema:
-        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    Quote:
+      type: object
+      properties:
+        orderToken:
+          type: string
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        shipping:
+          type: object
+          additionalProperties: true
     QuoteRequest:
       type: object
       properties:
@@ -124,52 +162,14 @@ components:
           type: string
         country:
           type: string
-    Quote:
-      type: object
-      properties:
-        orderToken:
-          type: string
-        total:
-          type: number
-        items:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        shipping:
-          type: object
-          additionalProperties: true
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-        issues:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request payload failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    OrderToken:
+      name: orderToken
+      in: path
+      required: true
+      description: The order token returned by a quote.
+      schema:
+        type: string
   securitySchemes:
     basicAuth:
       type: http

@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Scalable Press Billing Order API
-  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products. It lets developers browse a wholesale blank-and-printed product catalog, generate price quotes (product, printing, and shipping costs), place and manage print-and-ship orders, track fulfillment through order and item events, create designs and product mockups, and retrieve billing invoices. Authentication uses HTTP Basic auth - your private API key is supplied as the password (the username is left blank). The API spans two versioned surfaces - v2 for product, quote, order, design, customization, and billing, and v3 for event and mockup - both served from https://api.scalablepress.com.
+  title: Scalable Press Order API
+  description: The Scalable Press API is a REST interface to a print-on-demand and fulfillment platform for custom apparel, accessories, and promotional products.
   version: '2.0'
   contact:
     name: Scalable Press
@@ -150,50 +150,6 @@ paths:
           $ref: '#/components/responses/ValidationError'
 components:
   schemas:
-    Address:
-      type: object
-      properties:
-        name:
-          type: string
-        address1:
-          type: string
-        address2:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        zip:
-          type: string
-        country:
-          type: string
-    Event:
-      type: object
-      properties:
-        eventId:
-          type: string
-        type:
-          type: string
-          description: Event type such as order, validated, paid, unpaid, printing, shipped, cancelled, address-changed, expired, or hold.
-        orderId:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-        data:
-          type: object
-          additionalProperties: true
-    OrderRequest:
-      type: object
-      required:
-      - orderToken
-      properties:
-        orderToken:
-          type: string
-        name:
-          type: string
-        address:
-          $ref: '#/components/schemas/Address'
     Order:
       type: object
       properties:
@@ -212,6 +168,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      properties:
+        eventId:
+          type: string
+        type:
+          type: string
+          description: Event type such as order, validated, paid, unpaid, printing, shipped, cancelled, address-changed, expired, or hold.
+        orderId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          additionalProperties: true
     Error:
       type: object
       properties:
@@ -224,6 +196,34 @@ components:
           items:
             type: object
             additionalProperties: true
+    OrderRequest:
+      type: object
+      required:
+      - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
   responses:
     Unauthorized:
       description: Missing or invalid API key.

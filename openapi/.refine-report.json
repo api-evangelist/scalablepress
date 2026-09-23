@@ -1,14 +1,7 @@
 {
   "provider": "scalablepress",
   "sources": [
-    "scalablepress-billing-api-openapi.yml",
-    "scalablepress-customization-api-openapi.yml",
-    "scalablepress-design-api-openapi.yml",
-    "scalablepress-event-api-openapi.yml",
-    "scalablepress-mockup-api-openapi.yml",
-    "scalablepress-order-api-openapi.yml",
-    "scalablepress-product-api-openapi.yml",
-    "scalablepress-quote-api-openapi.yml"
+    "_original/scalablepress-openapi.yml"
   ],
   "outputs": [
     "scalablepress-billing-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "scalablepress-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "scalablepress-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-customization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-design-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-event-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-mockup-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-order-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-product-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scalablepress-quote-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
