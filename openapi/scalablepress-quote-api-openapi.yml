@@ -84,67 +84,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request payload failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-        issues:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-    Quote:
-      type: object
-      properties:
-        orderToken:
-          type: string
-        total:
-          type: number
-        items:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        shipping:
-          type: object
-          additionalProperties: true
-    QuoteRequest:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        address:
-          $ref: '#/components/schemas/Address'
-        features:
-          type: object
-          description: Optional per-quote features. The shipping feature selects custom shipping methods using carrier service codes such as US-FC, UPS-GND, FDX-GND, and DHL-GM.
-          additionalProperties: true
     Address:
       type: object
       properties:
@@ -162,6 +102,47 @@ components:
           type: string
         country:
           type: string
+    QuoteRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        features:
+          type: object
+          description: Optional per-quote features. The shipping feature selects custom shipping methods using carrier service codes such as US-FC, UPS-GND, FDX-GND, and DHL-GM.
+          additionalProperties: true
+    Quote:
+      type: object
+      properties:
+        orderToken:
+          type: string
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        shipping:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
   parameters:
     OrderToken:
       name: orderToken
@@ -170,6 +151,25 @@ components:
       description: The order token returned by a quote.
       schema:
         type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     basicAuth:
       type: http

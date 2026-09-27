@@ -86,18 +86,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-        issues:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
     Invoice:
       type: object
       properties:
@@ -112,6 +100,18 @@ components:
         createdAt:
           type: string
           format: date-time
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
   responses:
     NotFound:
       description: The requested resource was not found.
