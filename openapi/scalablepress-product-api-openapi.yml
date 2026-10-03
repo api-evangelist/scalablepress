@@ -117,6 +117,34 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    CategoryId:
+      name: categoryId
+      in: path
+      required: true
+      description: The ID of the product category.
+      schema:
+        type: string
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      description: The ID of the product.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Product:
       type: object
@@ -140,6 +168,17 @@ components:
         properties:
           type: object
           additionalProperties: true
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
     ProductItem:
       type: object
       properties:
@@ -167,45 +206,6 @@ components:
           items:
             type: object
             additionalProperties: true
-    Category:
-      type: object
-      properties:
-        categoryId:
-          type: string
-        name:
-          type: string
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    CategoryId:
-      name: categoryId
-      in: path
-      required: true
-      description: The ID of the product category.
-      schema:
-        type: string
-    ProductId:
-      name: productId
-      in: path
-      required: true
-      description: The ID of the product.
-      schema:
-        type: string
   securitySchemes:
     basicAuth:
       type: http

@@ -149,24 +149,26 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Address:
-      type: object
-      properties:
-        name:
-          type: string
-        address1:
-          type: string
-        address2:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        zip:
-          type: string
-        country:
-          type: string
     Event:
       type: object
       properties:
@@ -183,6 +185,17 @@ components:
         data:
           type: object
           additionalProperties: true
+    OrderRequest:
+      type: object
+      required:
+      - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
     Order:
       type: object
       properties:
@@ -201,17 +214,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Event'
-    OrderRequest:
-      type: object
-      required:
-      - orderToken
-      properties:
-        orderToken:
-          type: string
-        name:
-          type: string
-        address:
-          $ref: '#/components/schemas/Address'
     Error:
       type: object
       properties:
@@ -224,25 +226,23 @@ components:
           items:
             type: object
             additionalProperties: true
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request payload failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
   parameters:
     OrderId:
       name: orderId
