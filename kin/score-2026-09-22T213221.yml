@@ -1,29 +1,27 @@
-# Kin Score artifact — scalablepress — 2026-09-01T210448
+# Kin Score artifact — scalablepress — 2026-09-22T213221
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: scalablepress
-  schema_version: 0.18.0
-  scored_at: '2026-09-01'
-  run_ts: 2026-09-01T210448
-  composite: 40.0
-  band: developing
+  schema_version: 0.22.0
+  scored_at: '2026-09-22'
+  run_ts: 2026-09-22T213221
+  composite: 38.6
+  band: thin
   facets:
     discoverability: 68.5
     contract_quality: 56.0
-    governance: 0.0
-    operational_transparency: 31.6
-    developer_ergonomics: 33.3
-    commercial_clarity: 42.1
     contract_governance: 0.0
+    operational_transparency: 31.6
+    developer_ergonomics: 29.8
     access_clarity: 42.1
   agent_readiness:
-    score: 19.8
+    score: 21.5
     band: agent-aware
     dimensions:
       spec_presence: true
       agentic_access: derived
-      reversibility_documented: false
+      reversibility_documented: documented
       mcp_server: false
       auth_clarity: bearer
       idempotency: false
