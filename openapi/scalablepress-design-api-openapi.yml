@@ -84,12 +84,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     ValidationError:
       description: The request payload failed validation.
       content:
@@ -102,17 +96,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Design:
-      type: object
-      properties:
-        designId:
-          type: string
-        sides:
-          type: object
-          additionalProperties: true
-        name:
-          type: string
     Error:
       type: object
       properties:
@@ -125,6 +115,16 @@ components:
           items:
             type: object
             additionalProperties: true
+    Design:
+      type: object
+      properties:
+        designId:
+          type: string
+        sides:
+          type: object
+          additionalProperties: true
+        name:
+          type: string
   securitySchemes:
     basicAuth:
       type: http

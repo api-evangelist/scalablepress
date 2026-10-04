@@ -149,25 +149,6 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request payload failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     Event:
       type: object
@@ -185,17 +166,6 @@ components:
         data:
           type: object
           additionalProperties: true
-    OrderRequest:
-      type: object
-      required:
-      - orderToken
-      properties:
-        orderToken:
-          type: string
-        name:
-          type: string
-        address:
-          $ref: '#/components/schemas/Address'
     Order:
       type: object
       properties:
@@ -243,6 +213,36 @@ components:
           type: string
         country:
           type: string
+    OrderRequest:
+      type: object
+      required:
+      - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+  responses:
+    ValidationError:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     OrderId:
       name: orderId

@@ -85,12 +85,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API key.
       content:
@@ -103,36 +97,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    QuoteRequest:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        address:
-          $ref: '#/components/schemas/Address'
-        features:
-          type: object
-          description: Optional per-quote features. The shipping feature selects custom shipping methods using carrier service codes such as US-FC, UPS-GND, FDX-GND, and DHL-GM.
-          additionalProperties: true
-    Quote:
-      type: object
-      properties:
-        orderToken:
-          type: string
-        total:
-          type: number
-        items:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        shipping:
-          type: object
-          additionalProperties: true
     Error:
       type: object
       properties:
@@ -162,6 +133,35 @@ components:
           type: string
         country:
           type: string
+    Quote:
+      type: object
+      properties:
+        orderToken:
+          type: string
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        shipping:
+          type: object
+          additionalProperties: true
+    QuoteRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        address:
+          $ref: '#/components/schemas/Address'
+        features:
+          type: object
+          description: Optional per-quote features. The shipping feature selects custom shipping methods using carrier service codes such as US-FC, UPS-GND, FDX-GND, and DHL-GM.
+          additionalProperties: true
   parameters:
     OrderToken:
       name: orderToken
