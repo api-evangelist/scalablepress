@@ -117,6 +117,19 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     ProductId:
       name: productId
@@ -133,32 +146,6 @@ components:
       schema:
         type: string
   schemas:
-    ProductItem:
-      type: object
-      properties:
-        id:
-          type: string
-        color:
-          type: string
-        size:
-          type: string
-        sku:
-          type: string
-        weight:
-          type: number
-        price:
-          type: number
-    Category:
-      type: object
-      properties:
-        categoryId:
-          type: string
-        name:
-          type: string
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
     Product:
       type: object
       properties:
@@ -181,6 +168,21 @@ components:
         properties:
           type: object
           additionalProperties: true
+    ProductItem:
+      type: object
+      properties:
+        id:
+          type: string
+        color:
+          type: string
+        size:
+          type: string
+        sku:
+          type: string
+        weight:
+          type: number
+        price:
+          type: number
     Error:
       type: object
       properties:
@@ -193,19 +195,17 @@ components:
           items:
             type: object
             additionalProperties: true
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
   securitySchemes:
     basicAuth:
       type: http

@@ -166,6 +166,34 @@ components:
         data:
           type: object
           additionalProperties: true
+    OrderRequest:
+      type: object
+      required:
+      - orderToken
+      properties:
+        orderToken:
+          type: string
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      properties:
+        name:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
     Order:
       type: object
       properties:
@@ -196,41 +224,7 @@ components:
           items:
             type: object
             additionalProperties: true
-    Address:
-      type: object
-      properties:
-        name:
-          type: string
-        address1:
-          type: string
-        address2:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        zip:
-          type: string
-        country:
-          type: string
-    OrderRequest:
-      type: object
-      required:
-      - orderToken
-      properties:
-        orderToken:
-          type: string
-        name:
-          type: string
-        address:
-          $ref: '#/components/schemas/Address'
   responses:
-    ValidationError:
-      description: The request payload failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API key.
       content:
@@ -239,6 +233,12 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request payload failed validation.
       content:
         application/json:
           schema:
